@@ -9,9 +9,26 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}//drf_jwt_backend//manage.py",
-            "args": ["runserver"],
+            "args": [
+                "runserver"
+            ],
             "console": "integratedTerminal",
-            "django": true 
+            "django": true
+        },
+        {
+            "name": "Docker: Python - Django",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "python": {
+                "pathMappings": [
+                    {
+                        "localRoot": "${workspaceFolder}",
+                        "remoteRoot": "/app"
+                    }
+                ],
+                "projectType": "django"
+            }
         }
     ]
 }

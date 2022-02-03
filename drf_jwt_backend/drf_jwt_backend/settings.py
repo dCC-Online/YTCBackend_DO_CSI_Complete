@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -76,14 +77,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'drf_jwt_backend.wsgi.application'
 
-
 # Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'mysql.connector.django',
+        'NAME': 'ytc_backend',
+        'USER': 'root',
+        'PASSWORD': 'example',
+        'HOST': 'db',  # docker-compose service name 'db' resolves to host name 'db'
+        'PORT': 3306,
+        'OPTIONS': {
+            'autocommit': True
+        }
     }
 }
 
@@ -161,8 +166,3 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(days=10),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
 }
-
-try:
-    from drf_jwt_backend.local_settings import *
-except ImportError:
-    pass

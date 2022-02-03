@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_DATABASE=ytc_backend
+      - MYSQL_ROOT_PASSWORD=example
+    env_file:
+      - .live.env
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8085:8080
+
+  ytc-backend-prod:
+    container_name: ytc-backend-prod
+    image: ytc-backend-prod
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    # command: python ./drf_jwt_backend/manage.py runserver 0.0.0.0:8000
+    command: sh ./entrypoint.sh
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
