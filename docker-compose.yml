@@ -5,15 +5,16 @@ services:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
-    environment:
-      - MYSQL_DATABASE=ytc_backend
-      - MYSQL_ROOT_PASSWORD=example
+    volumes:
+      - production_db_volume:/var/lib/mysql
     env_file:
       - .live.env
 
   adminer:
     image: adminer
     restart: always
+    volumes:
+      - production_db_volume:/var/lib/mysql
     ports:
       - 8085:8080
 
@@ -29,3 +30,6 @@ services:
       - 8000:8000
     depends_on:
       - db
+
+volumes:
+  production_db_volume:
