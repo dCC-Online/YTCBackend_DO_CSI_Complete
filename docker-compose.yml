@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   db:
+    # Database service ("db" is used in the settings.py file for autoconnect)
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
@@ -9,8 +10,8 @@ services:
       - production_db_volume:/var/lib/mysql
     env_file:
       - .live.env
-
   adminer:
+    #Optional adminer service (for database administration) 
     image: adminer
     restart: always
     volumes:
@@ -19,17 +20,18 @@ services:
       - 8085:8080
 
   ytc-backend-prod:
+    # YTC Backend service: Django ORM
     container_name: ytc-backend-prod
-    image: ytc-backend-prod
+    image: cashmyers/ytc-backend-prod
     build:
       context: .
       dockerfile: ./Dockerfile
-    # command: python ./drf_jwt_backend/manage.py runserver 0.0.0.0:8000
     command: sh ./entrypoint.sh
     ports:
       - 8000:8000
     depends_on:
       - db
 
+# External database volume for data persistance upon deployment
 volumes:
   production_db_volume:
