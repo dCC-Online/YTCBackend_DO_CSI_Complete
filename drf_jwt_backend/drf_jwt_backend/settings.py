@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-$-*c5gei%cikbqw&1eqj$7_%c3npk^^7xp#_x(8oc$zy(j3wus
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -77,20 +77,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'drf_jwt_backend.wsgi.application'
 
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': 'ytc_backend',
-        'USER': 'root',
-        'PASSWORD': 'example',
-        'HOST': 'db',  # docker-compose service name 'db' resolves to host name 'db'
-        'PORT': 3306,
-        'OPTIONS': {
-            'autocommit': True
+# Elastic Beanstalk with provide connection info for attached DB instances in environ properties
+if 'RDS_HOSTNAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
         }
     }
-}
+else:
+# Connect locallly operated instance to AWS RDS database
+    DATABASES = {
+        'default': {
+            'ENGINE': 'mysql.connector.django',
+            'NAME': 'ytc_database',
+            'USER': 'admin',
+            'PASSWORD': 'adminadmin',
+            'HOST': 'ytc-database.c91lduhgfcxu.us-east-2.rds.amazonaws.com',
+            'PORT': 3306,
+        }
+    }
 
 
 # Password validation
