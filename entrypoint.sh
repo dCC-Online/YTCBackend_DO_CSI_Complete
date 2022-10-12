@@ -6,6 +6,7 @@ export DJANGO_SUPERUSER_PASSWORD=password1561
 export DJANGO_SUPERUSER_EMAIL=nomail@email.com
 
 # The next steps must be executed in the order they are listed here.
+
 python ./drf_jwt_backend/manage.py migrate
 
 python ./drf_jwt_backend/manage.py createsuperuser --noinput

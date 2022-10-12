@@ -1,0 +1,65 @@
+version: '3.9'
+
+services:
+  db:
+    # Database service ("db" is used in the settings.py file for autoconnect)
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - production_db_volume:/var/lib/mysql
+    env_file:
+      - .live.env
+
+  adminer:
+    #Optional adminer service (for database administration) 
+    image: adminer
+    restart: always
+    volumes:
+      - production_db_volume:/var/lib/mysql
+    ports:
+      - 8085:8080
+
+  ytc-backend-prod:
+    # YTC Backend service: Django ORM
+    container_name: ytc-backend-prod
+    image: cashmyers/ytc-backend-prod
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command:
+      [
+        sh,
+        -cx,
+        'python ./drf_jwt_backend/manage.py runserver 0.0.0.0:8000'
+      ]
+    ports:
+      - 80:8000
+    depends_on:
+      - db
+      - migration
+
+  migration:
+    # YTC Backend service: Django ORM
+    container_name: ytc-backend-migration
+    image: cashmyers/ytc-backend-prod
+    environment:
+      - MYSQL_DATABASE=ytc_backend
+      - MYSQL_ROOT_PASSWORD=example
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_PASSWORD=password1561
+      - DJANGO_SUPERUSER_EMAIL=nomail@email.com
+    command:
+      [
+        sh,
+        -cx,
+        "python ./drf_jwt_backend/manage.py migrate && python ./drf_jwt_backend/manage.py createsuperuser --noinput"
+      ]
+    links:
+      - db
+    depends_on:
+      - db
+
+# External database volume for data persistance upon deployment
+volumes:
+  production_db_volume:

@@ -132,3 +132,6 @@ dmypy.json
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# Misc Saved Docker files for comparison
+Original-Docker-Files/
