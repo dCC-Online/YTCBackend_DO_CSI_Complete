@@ -1,15 +1,16 @@
 version: '3.9'
 
-services:
+services:   
+
   ytc-backend-prod:
     # YTC Backend service: Django ORM
     container_name: ytc-backend-prod
-    image: ytcbackend
+    image: cashmyers/ytc-backend-prod
     command: 
       [
         sh,
         -cx,
-        'python ./drf_jwt_backend/manage.py runserver localhost:8000'
+        'python ./drf_jwt_backend/manage.py runserver 0.0.0.0:8000'
       ]
     ports:
       - 8000:8000
